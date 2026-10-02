@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Надёжные игры 2026 — проверка слота по сертификату, RTP и записи раунда</title>
+<meta name="description" content="Надёжные игры в 2026 году: разбор по пунктам — сертификат лаборатории на конкретную сборку, провабли фэйр и пересчёт раунда, версия RTP и её раскрытие, домен провайдера, запись истории и списки клонов.">
+<link rel="canonical" href="https://nadezhnye-igry496.github.io/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Надёжные игры 2026: семь пунктов проверки честности конкретного слота">
+<meta property="og:description" content="Что делает надёжной отдельную игру, а не казино: сертификат на сборку, провабли фэйр, версия RTP, домен провайдера, Round ID и сверка со списками клонов.">
+<meta property="og:url" content="https://nadezhnye-igry496.github.io/">
+<meta property="og:locale" content="ru_RU">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --ivory:#f4f1e6;--card:#fffef8;--card-2:#ece7d6;--raise:#fffffb;
+  --ink:#1a201a;--ink-2:#4b5347;--ink-3:#6f7768;--hair:#ded8c6;--hair-2:#bcb49c;
+  --forest:#1f5c42;--forest-deep:#15402f;--forest-tint:#dfeae1;--on-forest:#f3f8f2;
+  --good:#2f8a5c;--good-tint:#dcecdf;--bad:#a23126;--bad-tint:#f2ddd7;--warn:#866513;--warn-tint:#efe6cc;
+  --c1:#1f5c42;--c2:#ab6d28;--c3:#3c6e87;--c4:#7d5aa6;--gridline:#d8d1bd;
+  --disp:"Playfair Display","PT Serif",Georgia,"Times New Roman",serif;
+  --sans:"Manrope","Segoe UI",Roboto,system-ui,sans-serif;
+  --fs-h1:clamp(1.9rem,1.28rem + 2.5vw,2.95rem);--fs-h2:clamp(1.38rem,1.12rem + 1.05vw,1.78rem);--fs-h3:1.12rem;
+  --fs-lede:clamp(1.06rem,1rem + .38vw,1.2rem);--fs-body:1.0625rem;--fs-ui:.9375rem;--fs-sm:.875rem;--fs-xs:.78rem;--fs-fig:clamp(1.45rem,1.18rem + 1vw,1.85rem);
+  --g1:4px;--g2:8px;--g3:12px;--g4:16px;--g5:20px;--g6:24px;--g8:32px;--g10:40px;--g12:48px;--g16:64px;
+  --pad:clamp(16px,4vw,24px);--band:clamp(44px,6vw,80px);
+  --col:690px;--full:1060px;
+  --r1:4px;--r2:8px;--r3:13px;
+  --sh1:0 1px 2px rgba(21,32,24,.07);--sh2:0 8px 22px -10px rgba(21,32,24,.26);
+  --ease:cubic-bezier(.2,.8,.3,1);--t1:140ms;--t2:240ms;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ivory:#11150f;--card:#191e15;--card-2:#232a1a;--raise:#2b3221;
+  --ink:#eef0e2;--ink-2:#c2c7b2;--ink-3:#8f9580;--hair:#2c3324;--hair-2:#454e38;
+  --forest:#78c6a0;--forest-deep:#95d7b4;--forest-tint:#1c3127;--on-forest:#10150f;
+  --good:#79c79a;--good-tint:#1b3326;--bad:#e2887c;--bad-tint:#39211d;--warn:#d6ac54;--warn-tint:#342b18;
+  --c1:#78c6a0;--c2:#cf9a56;--c3:#80a8c0;--c4:#b69ad6;--gridline:#39412f;
+  --sh1:0 1px 2px rgba(0,0,0,.5);--sh2:0 10px 24px -10px rgba(0,0,0,.65);
+  color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --ivory:#11150f;--card:#191e15;--card-2:#232a1a;--raise:#2b3221;
+  --ink:#eef0e2;--ink-2:#c2c7b2;--ink-3:#8f9580;--hair:#2c3324;--hair-2:#454e38;
+  --forest:#78c6a0;--forest-deep:#95d7b4;--forest-tint:#1c3127;--on-forest:#10150f;
+  --good:#79c79a;--good-tint:#1b3326;--bad:#e2887c;--bad-tint:#39211d;--warn:#d6ac54;--warn-tint:#342b18;
+  --c1:#78c6a0;--c2:#cf9a56;--c3:#80a8c0;--c4:#b69ad6;--gridline:#39412f;
+  --sh1:0 1px 2px rgba(0,0,0,.5);--sh2:0 10px 24px -10px rgba(0,0,0,.65);
+  color-scheme:dark;}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition-duration:1ms!important;animation-duration:1ms!important;transform:none!important}}
+body{margin:0;background:var(--ivory);color:var(--ink);font:400 var(--fs-body)/1.62 var(--sans);-webkit-font-smoothing:antialiased;hyphens:auto;overflow-x:hidden}
+h1,h2,h3{font-family:var(--disp);margin:0;text-wrap:balance}
+h1{font-size:var(--fs-h1);line-height:1.1;font-weight:800;letter-spacing:-.005em;max-inline-size:22ch}
+h2{font-size:var(--fs-h2);line-height:1.2;font-weight:700}
+h3{font-size:var(--fs-h3);line-height:1.3;font-weight:700;font-family:var(--sans);margin:var(--g8) 0 var(--g2)}
+p{margin:0 0 var(--g3);text-wrap:pretty}
+a{color:var(--forest);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;transition:color var(--t1) var(--ease)}
+a:hover{color:var(--forest-deep);text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--forest);outline-offset:2px}
+::selection{background:var(--forest-tint);color:var(--ink)}
+.nums{font-variant-numeric:tabular-nums}
+.veris-full{max-width:var(--full);margin-inline:auto;padding-inline:var(--pad)}
+.veris-col{max-width:var(--col);margin-inline:auto;padding-inline:var(--pad)}
+section[id]{scroll-margin-top:64px}
+.veris-mute{color:var(--ink-3)}
+.veris-sm{font-size:var(--fs-sm);line-height:1.45}
+
+/* шапка */
+.veris-top{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--ivory) 92%,transparent);backdrop-filter:none;border-bottom:1px solid var(--hair);height:56px}
+.veris-top-in{height:100%;display:flex;align-items:center;gap:var(--g5);justify-content:space-between}
+.veris-sign{display:inline-flex;align-items:center;gap:9px;font-family:var(--disp);font-weight:700;font-size:17px;color:var(--ink);text-decoration:none;white-space:nowrap}
+.veris-sign:hover{color:var(--ink);text-decoration:none}
+.veris-sign svg{width:26px;height:26px;flex:none}
+.veris-nav{display:flex;gap:var(--g4);font-size:14px;font-weight:600;overflow-x:auto;white-space:nowrap;scrollbar-width:none;mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent)}
+.veris-nav::-webkit-scrollbar{display:none}
+.veris-nav a{color:var(--ink-2);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.veris-nav a:hover{color:var(--ink)}
+.veris-nav a.veris-here{color:var(--forest);border-bottom-color:var(--forest)}
+.veris-toggle{flex:none;font:600 13px var(--sans);color:var(--ink-2);background:var(--card);border:1px solid var(--hair-2);border-radius:var(--r2);padding:5px 11px;cursor:pointer}
+.veris-toggle:hover{color:var(--ink);border-color:var(--ink-3)}
+
+/* первый экран */
+.veris-hero{padding-block:var(--g12) var(--g10)}
+.veris-hero-grid{display:grid;grid-template-columns:minmax(0,1.32fr) minmax(290px,.9fr);gap:var(--g10);align-items:start}
+@media (max-width:880px){.veris-hero-grid{grid-template-columns:1fr}}
+.veris-dateline{font-size:var(--fs-sm);color:var(--ink-3);margin-bottom:var(--g3)}
+.veris-lede{font-size:var(--fs-lede);line-height:1.52;color:var(--ink-2);margin:var(--g4) 0 var(--g5);max-inline-size:58ch}
+.veris-toc{margin:0;padding:0 0 0 1.3em;columns:2;column-gap:var(--g6);font-size:var(--fs-ui);color:var(--ink-2)}
+.veris-toc li{margin-bottom:5px;break-inside:avoid}
+.veris-toc a{color:var(--ink-2);text-decoration-color:var(--hair-2)}
+.veris-toc a:hover{color:var(--forest)}
+@media (max-width:520px){.veris-toc{columns:1}}
+.veris-passport{margin:0;background:var(--card);border:1px solid var(--hair-2);border-radius:var(--r3);padding:var(--g5) var(--g5) var(--g4);box-shadow:var(--sh2);position:relative;overflow:hidden}
+.veris-passport::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--forest)}
+.veris-passport-h{font-family:var(--disp);font-weight:700;font-size:var(--fs-h3);margin:6px 0 var(--g3);display:flex;justify-content:space-between;align-items:baseline;gap:var(--g3)}
+.veris-passport-h span{font-family:var(--sans);font-weight:600;font-size:var(--fs-xs);color:var(--warn);background:var(--warn-tint);padding:2px 7px;border-radius:var(--r1);white-space:nowrap}
+.veris-checks{margin:0;padding:0;list-style:none;counter-reset:vc}
+.veris-checks li{counter-increment:vc;display:grid;grid-template-columns:auto 1fr;gap:var(--g3);align-items:baseline;padding:7px 0;border-bottom:1px dotted var(--hair-2)}
+.veris-checks li:last-child{border-bottom:0}
+.veris-checks li::before{content:counter(vc);font-family:var(--disp);font-weight:700;font-size:.95rem;color:var(--on-forest);background:var(--forest);width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.veris-checks b{font-weight:700}
+.veris-checks small{display:block;font-size:var(--fs-xs);color:var(--ink-3)}
+.veris-passport-foot{font-size:var(--fs-xs);color:var(--ink-3);margin:var(--g3) 0 0}
+
+/* разделы */
+.veris-band{padding-block:var(--band)}
+.veris-band+.veris-band{border-top:1px solid var(--hair)}
+.veris-no{font-family:var(--disp);font-style:italic;font-size:var(--fs-sm);color:var(--ink-3);margin-bottom:var(--g2)}
+.veris-band h2{margin-bottom:var(--g4)}
+.veris-claim{font-size:var(--fs-body);max-inline-size:64ch;margin-bottom:var(--g5);padding:var(--g3) var(--g4);background:var(--card);border-left:3px solid var(--forest);border-radius:0 var(--r2) var(--r2) 0}
+.veris-claim b{font-weight:800}
+.veris-prose{max-inline-size:66ch}
+.veris-prose ul{padding-left:1.2em;margin:0 0 var(--g3)}
+.veris-prose li{margin-bottom:6px}
+
+/* таблицы */
+.veris-plate{margin:var(--g5) 0;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--hair);border-radius:var(--r2);background:var(--card)}
+.veris-plate table{border-collapse:collapse;width:100%;min-width:560px;font-size:var(--fs-ui)}
+.veris-plate caption{text-align:left;font-family:var(--disp);font-weight:700;font-size:var(--fs-ui);padding:var(--g3) var(--g4);color:var(--ink);border-bottom:1px solid var(--hair)}
+.veris-plate th,.veris-plate td{padding:9px var(--g4);text-align:left;vertical-align:top;border-bottom:1px solid var(--hair)}
+.veris-plate thead th{font-weight:700;font-size:var(--fs-sm);color:var(--on-forest);background:var(--forest);border-bottom:0}
+.veris-plate tbody th{font-weight:700;color:var(--ink)}
+.veris-plate tbody tr:last-child td,.veris-plate tbody tr:last-child th{border-bottom:0}
+.veris-plate td.veris-right{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.veris-yes{color:var(--good);font-weight:700}
+.veris-no-ink{color:var(--bad);font-weight:700}
+.veris-part{color:var(--warn);font-weight:700}
+.veris-plate tfoot td{font-size:var(--fs-sm);color:var(--ink-3);border-bottom:0}
+
+/* фигуры */
+.veris-fig{margin:var(--g6) 0;background:var(--card);border:1px dashed var(--hair-2);border-radius:var(--r3);padding:var(--g4) var(--g5)}
+.veris-fig svg{display:block;width:100%;overflow:visible}
+.veris-fig svg text{font-family:var(--sans);fill:var(--ink-2);font-size:13px}
+.veris-fig svg .veris-val{fill:var(--ink);font-weight:700}
+.veris-fig svg .veris-inset{fill:var(--on-forest);font-weight:700;font-size:12px}
+.veris-fig svg .veris-axis{fill:var(--ink-3);font-size:11px}
+.veris-fig svg .veris-tag{fill:var(--forest);font-size:12px;font-weight:700}
+.veris-fig-note{font-size:var(--fs-sm);color:var(--ink-3);margin-top:var(--g3)}
+.veris-legend{display:flex;gap:var(--g4);flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin:var(--g3) 0 0}
+.veris-dot{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.veris-fig .veris-plate{margin:var(--g4) 0 0;border-style:solid}
+.veris-fig .veris-plate table{min-width:480px}
+
+/* схема provably fair */
+.veris-flow svg text{font-size:12px}
+.veris-flow svg .veris-step-t{fill:var(--ink);font-weight:700;font-size:12.5px}
+.veris-flow svg .veris-term{font-weight:700;font-size:12px}
+
+/* образцы игр */
+.veris-samples{list-style:none;margin:var(--g5) 0 0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:var(--g4)}
+@media (max-width:720px){.veris-samples{grid-template-columns:1fr}}
+.veris-sample{background:var(--card);border:1px solid var(--hair-2);border-radius:var(--r3);padding:var(--g4) var(--g5);box-shadow:var(--sh1)}
+.veris-sample h3{margin:0 0 var(--g2);display:flex;align-items:center;gap:9px}
+.veris-sample h3 svg{width:28px;height:28px;flex:none}
+.veris-sample .veris-badge{font-size:var(--fs-xs);font-weight:600;color:var(--warn);background:var(--warn-tint);padding:1px 6px;border-radius:var(--r1);margin-left:auto}
+.veris-sample dl{margin:0;font-size:var(--fs-sm)}
+.veris-sample dl div{display:flex;justify-content:space-between;gap:var(--g3);padding:4px 0;border-bottom:1px dotted var(--hair-2)}
+.veris-sample dl div:last-child{border-bottom:0}
+.veris-sample dt{color:var(--ink-3)}
+.veris-sample dd{margin:0;text-align:right;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* вопросы */
+.veris-ask{border-top:1px solid var(--hair);margin:0}
+.veris-ask:last-of-type{border-bottom:1px solid var(--hair)}
+.veris-ask summary{cursor:pointer;list-style:none;padding:var(--g4) var(--g8) var(--g4) 0;font-family:var(--disp);font-weight:700;font-size:1.04rem;position:relative}
+.veris-ask summary::-webkit-details-marker{display:none}
+.veris-ask summary::after{content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);font-family:var(--sans);font-weight:400;font-size:1.4rem;color:var(--forest);transition:transform var(--t2) var(--ease)}
+.veris-ask[open] summary::after{transform:translateY(-50%) rotate(45deg)}
+.veris-answer{padding:0 0 var(--g4);color:var(--ink-2);max-inline-size:66ch}
+.veris-answer p:last-child{margin-bottom:0}
+.veris-ask-stack{margin-top:var(--g5)}
+
+/* канал, 18+, подвал */
+.veris-wire{background:var(--card);border:1px solid var(--hair-2);border-radius:var(--r3);padding:var(--g6);display:grid;grid-template-columns:1fr auto;gap:var(--g5);align-items:center;margin-top:var(--g5)}
+@media (max-width:640px){.veris-wire{grid-template-columns:1fr}}
+.veris-wire-link{display:inline-block;font-weight:800;font-size:var(--fs-ui);color:var(--on-forest);background:var(--forest);border-radius:var(--r2);padding:11px 19px;text-decoration:none;white-space:nowrap;box-shadow:var(--sh1);transition:background var(--t1) var(--ease)}
+.veris-wire-link:hover{background:var(--forest-deep);color:var(--on-forest)}
+.veris-adult{padding-block:var(--g8);border-top:1px solid var(--hair)}
+.veris-adult-mark{display:inline-block;font-family:var(--disp);font-weight:700;font-size:var(--fs-sm);border:2px solid var(--ink);border-radius:50%;width:38px;height:38px;line-height:34px;text-align:center;margin-right:var(--g3);vertical-align:middle}
+.veris-foot{border-top:1px solid var(--hair-2);padding-block:var(--g8) var(--g12);font-size:var(--fs-sm);color:var(--ink-3)}
+.veris-foot-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:var(--g6)}
+@media (max-width:720px){.veris-foot-grid{grid-template-columns:1fr}}
+.veris-foot h3{margin:0 0 var(--g2);font-size:var(--fs-ui);color:var(--ink);font-family:var(--sans)}
+.veris-foot p{margin-bottom:var(--g2)}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","@id":"https://nadezhnye-igry496.github.io/#page","headline":"Надёжные игры 2026: семь пунктов, по которым проверяют честность конкретного слота","description":"Надёжные игры в 2026 году: разбор по пунктам — сертификат лаборатории на конкретную сборку, провабли фэйр и пересчёт раунда, версия RTP и её раскрытие, домен провайдера, запись истории и списки клонов.","inLanguage":"ru","datePublished":"2026-10-01","dateModified":"2026-10-01","author":{"@type":"Organization","name":"Редакция «Зерно и подпись»"},"publisher":{"@type":"Organization","name":"Зерно и подпись"},"mainEntityOfPage":"https://nadezhnye-igry496.github.io/"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","@id":"https://nadezhnye-igry496.github.io/#faq","mainEntity":[
+{"@type":"Question","name":"Сертификат есть у казино — значит, конкретная игра тоже проверена?","acceptedAnswer":{"@type":"Answer","text":"Не обязательно. Лицензия и сертификат платформы относятся к оператору и его системе учёта ставок, а честность отдельного слота подтверждает отдельный отчёт лаборатории на конкретную сборку и версию. Казино может держать лицензию и при этом включить переконфигурированную версию игры с другим RTP. Поэтому сертификат проверяют на уровне тайтла и его номера версии, а не по логотипу в подвале сайта."}},
+{"@type":"Question","name":"Как по номеру отчёта GLI проверить, что сертифицирована именно эта игра?","acceptedAnswer":{"@type":"Answer","text":"В окне информации игры или в её паспорте на сайте провайдера указывают идентификатор сборки и дату сертификации. Этот номер сверяют с реестром лаборатории: GLI, iTech Labs и eCOGRA ведут публичные страницы верификации, где по идентификатору видно название тайтла, версию математики и перечень проверенных RTP. Если номер не находится или относится к другой версии, считать игру проверенной нельзя."}},
+{"@type":"Question","name":"Чем провабли фэйр отличается от сертификата RNG у обычного слота?","acceptedAnswer":{"@type":"Answer","text":"Сертификат RNG — это доверие к лаборатории: игрок полагается на то, что независимый аудитор проверил генератор. Провабли фэйр переносит проверку на самого игрока: до раунда публикуется хеш серверного зерна, игрок добавляет своё зерно, а после раунда серверное зерно раскрывается, и результат можно пересчитать самостоятельно. Первый механизм типичен для классических слотов, второй — для криптовалютных игр вроде дайса и краша."}},
+{"@type":"Question","name":"Где посмотреть RTP, по которому игра настроена у этого оператора?","acceptedAnswer":{"@type":"Answer","text":"В окне информации самой игры — значок «i» или раздел «Правила» внутри запущенного тайтла, а не в описании на витрине. Провайдеры вроде Play’n GO, Pragmatic Play и NetEnt выпускают один слот в нескольких версиях RTP, и оператор выбирает версию при подключении. Если в окне стоит 94,0 % при заявленных на витрине 96,5 %, расчёт ведут по 94,0 %."}},
+{"@type":"Question","name":"Почему важно, с какого домена подгружается сама игра?","acceptedAnswer":{"@type":"Answer","text":"Оригинальный тайтл грузится с домена провайдера или его сети доставки, и адрес виден в свойствах фрейма игры. Подделка подгружает похожую по виду сборку со стороннего домена, где математику и выплаты меняют незаметно для игрока. Совпадение домена с доменом студии-разработчика — косвенный, но проверяемый признак того, что запущена настоящая игра, а не обёртка."}},
+{"@type":"Question","name":"Что такое Round ID и зачем сохранять историю раунда?","acceptedAnswer":{"@type":"Answer","text":"Round ID — уникальный номер раунда, по которому оператор и провайдер находят ставку, результат и время в своих журналах. История раунда доступна в меню игры или в разделе аккаунта и содержит эти номера. Если возникнет спор о невыплаченном выигрыше или сбое, именно Round ID позволяет восстановить, что произошло; без него жалоба в поддержку или регулятору остаётся словом против слова."}},
+{"@type":"Question","name":"Как отличить оригинальный слот от переделанной сборки с заниженным RTP?","acceptedAnswer":{"@type":"Answer","text":"Сверяют три вещи: домен загрузки игры, номер версии и RTP в окне информации, идентификатор сертификата. У оригинала домен принадлежит провайдеру, версия и RTP совпадают с паспортом тайтла, а номер отчёта находится в реестре лаборатории. У переделки расходится хотя бы один пункт: чужой домен, RTP ниже документированного или сертификат, который не находится. Дополнительно сверяются с базами предупреждений о фейковых сборках."}},
+{"@type":"Question","name":"Можно ли доверять игре без провабли фэйр, если у неё есть сертификат лаборатории?","acceptedAnswer":{"@type":"Answer","text":"Да, для классических слотов это основной механизм доверия: провабли фэйр к ним технически неприменим, потому что результат формирует сертифицированный генератор, а не раскрываемое зерно. Для такой игры проверяют сертификат RNG на версию, раскрытый RTP и запись раунда. Провабли фэйр ожидают от криптовалютных игр, где его отсутствие — уже повод для осторожности."}},
+{"@type":"Question","name":"Влияет ли надёжность игры на налог с выигрыша в России?","acceptedAnswer":{"@type":"Answer","text":"Нет, налог не зависит от того, насколько проверяема игра. Для налогового резидента России выигрыш в азартных играх — доход, с которого НДФЛ платит сам игрок по декларации 3-НДФЛ, если сумма выигрышей за год превысила 4 000 ₽; ставка 13 % в пределах общей шкалы. Иностранный оператор налоговым агентом не выступает. Проверяемость раунда влияет на доказуемость выигрыша в споре, а не на размер налога."}}
+]}
+</script>
+</head>
+<body>
+<header class="veris-top">
+  <div class="veris-full veris-top-in">
+    <a class="veris-sign" href="#top" aria-label="Зерно и подпись — к началу">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22" fill="none" stroke="var(--forest)" stroke-width="3"/><circle cx="32" cy="32" r="7" fill="var(--forest)"/><path d="M32 10v8M32 46v8M10 32h8M46 32h8" stroke="var(--forest)" stroke-width="3" stroke-linecap="round"/><path d="M24 40l5-5M40 24l-5 5" stroke="var(--forest)" stroke-width="2.4" stroke-linecap="round" opacity=".7"/></svg>
+      Зерно и подпись
+    </a>
+    <nav class="veris-nav" aria-label="Разделы">
+      <a href="#map">Семь проверок</a>
+      <a href="#cert">Сертификат</a>
+      <a href="#fair">Provably fair</a>
+      <a href="#rtp">Версия RTP</a>
+      <a href="#domain">Домен</a>
+      <a href="#record">Round ID</a>
+      <a href="#clones">Клоны</a>
+      <a href="#recap">Образцы</a>
+      <a href="#faq">Вопросы</a>
+    </nav>
+    <button class="veris-toggle" type="button" data-toggle aria-label="Переключить тему">Тема</button>
+  </div>
+</header>
+
+<main>
+<section class="veris-hero" id="top">
+  <div class="veris-full veris-hero-grid">
+    <div>
+      <p class="veris-dateline nums">Обновлено 1 октября 2026 · Москва · редакция «Зерно и подпись»</p>
+      <h1>Надёжные игры 2026: семь пунктов, по которым проверяют честность конкретного слота</h1>
+      <p class="veris-lede">Надёжность в азартном лобби обычно обсуждают на уровне казино — лицензия, выплаты, репутация. Этот разбор переносит проверку на уровень отдельной игры: что именно делает проверяемым конкретный слот или криптовалютный тайтл, а не площадку вокруг него. Семь пунктов по порядку: сертификат лаборатории на сборку, механизм provably fair, версия RTP и её раскрытие, домен загрузки, запись раунда через Round ID и сверка со списками клонов. Числа и четыре образца игр в разборе — расчётные примеры; партнёрских ссылок и названий конкретных казино на странице нет.</p>
+      <ol class="veris-toc" aria-label="Содержание">
+        <li><a href="#map">Семь проверок игры</a></li>
+        <li><a href="#cert">Сертификат на сборку</a></li>
+        <li><a href="#fair">Provably fair</a></li>
+        <li><a href="#rtp">Версия RTP</a></li>
+        <li><a href="#domain">Домен загрузки</a></li>
+        <li><a href="#record">Запись раунда</a></li>
+        <li><a href="#clones">Списки клонов</a></li>
+        <li><a href="#recap">Четыре образца игр</a></li>
+      </ol>
+    </div>
+    <aside class="veris-passport" aria-label="Паспорт проверки игры в семи пунктах">
+      <p class="veris-passport-h">Паспорт игры <span>семь пунктов</span></p>
+      <ol class="veris-checks">
+        <li><div><b>Сертификат на сборку</b><small>отчёт GLI/iTech Labs на версию, не на казино</small></div></li>
+        <li><div><b>Provably fair</b><small>хеш зерна до раунда, пересчёт после</small></div></li>
+        <li><div><b>Версия RTP</b><small>число в окне «i», а не на витрине</small></div></li>
+        <li><div><b>Домен провайдера</b><small>откуда грузится фрейм игры</small></div></li>
+        <li><div><b>Round ID</b><small>номер раунда и история ставок</small></div></li>
+        <li><div><b>Нет в списках клонов</b><small>сверка с базами фейковых сборок</small></div></li>
+        <li><div><b>Совпадение паспорта</b><small>версия, RTP и сертификат сходятся</small></div></li>
+      </ol>
+      <p class="veris-passport-foot">Порядок пунктов — от самого весомого к уточняющему. Каждый разбирается в своём разделе ниже с таблицей и расчётом.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="veris-band" id="map">
+  <div class="veris-col">
+    <p class="veris-no">I</p>
+    <h2>Семь проверок, которые относятся к игре, а не к казино</h2>
+    <p class="veris-claim"><b>Лицензия казино не переносится на отдельный тайтл автоматически.</b> Оператор отвечает за учёт ставок и выплаты, но математику конкретного слота задаёт провайдер, а подтверждает её лаборатория — отдельным отчётом на версию. Поэтому надёжность игры собирается из семи признаков, которые проверяются независимо от того, что написано в подвале сайта.</p>
+    <div class="veris-plate">
+      <table>
+        <caption>Семь пунктов: что проверяет каждый и где искать ответ</caption>
+        <thead><tr><th scope="col">Пункт</th><th scope="col">На какой вопрос отвечает</th><th scope="col">Где смотреть</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Сертификат на сборку</th><td>проверена ли эта версия игры независимой лабораторией</td><td>окно «i», паспорт тайтла, реестр лаборатории</td></tr>
+          <tr><th scope="row">Provably fair</th><td>может ли игрок сам пересчитать результат раунда</td><td>раздел Fairness в игре, настройки зерна</td></tr>
+          <tr><th scope="row">Версия RTP</th><td>по какой отдаче настроена игра у оператора</td><td>окно информации запущенной игры</td></tr>
+          <tr><th scope="row">Домен загрузки</th><td>подлинная сборка или сторонняя обёртка</td><td>свойства фрейма, адрес ресурса игры</td></tr>
+          <tr><th scope="row">Round ID</th><td>можно ли восстановить спорный раунд</td><td>история игры, журнал аккаунта</td></tr>
+          <tr><th scope="row">Списки клонов</th><td>нет ли предупреждений о фейковой сборке</td><td>базы предупреждений о поддельных играх</td></tr>
+          <tr><th scope="row">Совпадение паспорта</th><td>сходятся ли версия, RTP и номер сертификата</td><td>сверка трёх источников между собой</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="3">Первые шесть пунктов самостоятельны; седьмой — итоговая сверка, которая ловит переделку, прошедшую отдельные проверки по частям.</td></tr></tfoot>
+      </table>
+    </div>
+    <div class="veris-prose">
+      <p>Разделение уровней важно по простой причине: одна и та же игра у двух операторов бывает настроена по-разному. Провайдер выпускает тайтл с набором допустимых конфигураций отдачи, а оператор при подключении выбирает одну из них. Лицензия казино при этом не меняется, а отдача по конкретному слоту — да. Значит, вопрос «надёжна ли игра» корректно задавать к связке «тайтл + версия + оператор», а не к бренду площадки.</p>
+      <p>Шесть из семи пунктов проверяются за несколько минут прямо в интерфейсе: информация внутри запущенного тайтла, раздел честности, история раунда и свойства фрейма доступны игроку без обращения в поддержку. Седьмой пункт — сверка — не требует новых данных, а соединяет уже собранные: если номер версии в окне «i» не совпадает с версией в сертификате, остальные галочки обесцениваются.</p>
+      <p>Классические слоты и криптовалютные игры закрывают эти пункты по-разному. У слота опорой служит сертификат генератора и раскрытый RTP; механизм provably fair к нему неприменим. У дайса, краша и подобных тайтлов, наоборот, основой доверия становится пересчёт раунда по зерну, а RTP задаётся формулой выплат. Дальше оба типа разобраны отдельно, чтобы не путать способы проверки.</p>
+    </div>
+    <details class="veris-ask"><summary>Сертификат есть у казино — значит, конкретная игра тоже проверена?</summary><div class="veris-answer"><p>Не обязательно. Лицензия и сертификат платформы относятся к оператору и его системе учёта ставок, а честность отдельного слота подтверждает отдельный отчёт лаборатории на конкретную сборку и версию. Казино может держать лицензию и при этом включить переконфигурированную версию игры с другим RTP. Поэтому сертификат проверяют на уровне тайтла и его номера версии, а не по логотипу в подвале сайта.</p></div></details>
+  </div>
+</section>
+
+<section class="veris-band" id="cert">
+  <div class="veris-col">
+    <p class="veris-no">II</p>
+    <h2>Сертификат на сборку: отчёт лаборатории, номер и дата против логотипа в подвале</h2>
+    <p class="veris-claim"><b>Логотип лаборатории в подвале казино и сертификат на конкретную игру — разные вещи.</b> Первый говорит, что оператор когда-то проходил аудит платформы; второй подтверждает, что данная версия математики игры проверена, и у него есть идентификатор, дата и перечень допущенных RTP. Проверяется именно второй — по номеру в реестре лаборатории.</p>
+    <div class="veris-prose">
+      <p>Стандарт, по которому проверяют онлайн-игры, — GLI-19 для игровых систем удалённого доступа; наряду с Gaming Laboratories International аудит проводят iTech Labs, eCOGRA и BMM Testlabs. Лаборатория проверяет генератор случайных чисел на равномерность и непредсказуемость, сверяет фактическую отдачу с заявленной на большой выборке раундов и фиксирует контрольную сумму сборки. Результат — отчёт на конкретную версию игры, а не на казино и не на провайдера в целом.</p>
+      <p>У отчёта три реквизита, которые имеет смысл сверять: идентификатор сборки или номер сертификата, дата проверки и список сертифицированных значений RTP. Провайдеры публикуют их в паспорте тайтла и дублируют в окне информации игры. Лаборатории ведут публичные страницы верификации: по идентификатору на сайте лаборатории видно название игры, версию математики и проверенные конфигурации отдачи. Проверить подлинность можно на сайте <a href="https://gaminglabs.com/" rel="nofollow noopener" target="_blank">Gaming Laboratories International</a> или <a href="https://ecogra.org/" rel="nofollow noopener" target="_blank">eCOGRA</a> — это единственные внешние адреса в разборе, кроме канала редакции.</p>
+      <p>Частая подмена понятий — ссылка на «сертификат RNG казино». Он подтверждает, что платформенный генератор оператора исправен, но ничего не говорит о математике конкретного слота от стороннего провайдера. Если тайтл подключён через агрегатора, цепочка ответственности длиннее, и отчёт нужно искать у разработчика, а не у оператора и не у посредника.</p>
+      <p>Дата проверки — третий реквизит, который часто недооценивают. Отчёт лаборатории описывает ту математику, что существовала на момент аудита; после крупного обновления механики провайдер обязан проходить повторную сертификацию. Просроченный на годы сертификат при свежей версии сборки означает, что проверяли не то, во что играют сейчас. Поэтому дату сопоставляют с номером версии: они должны относиться к одному выпуску, иначе реквизит теряет доказательную силу.</p>
+    </div>
+    <div class="veris-plate">
+      <table>
+        <caption>Три уровня сертификации и что каждый реально подтверждает</caption>
+        <thead><tr><th scope="col">Уровень</th><th scope="col">Что проверено</th><th scope="col">Относится к отдельной игре</th><th scope="col">Как сверить</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Лицензия оператора</th><td>право принимать ставки, учёт средств</td><td class="veris-no-ink">нет</td><td>реестр регулятора по номеру лицензии</td></tr>
+          <tr><th scope="row">Сертификат платформы</th><td>генератор и учёт на стороне казино</td><td class="veris-part">частично</td><td>отчёт аудита платформы оператора</td></tr>
+          <tr><th scope="row">Сертификат на тайтл</th><td>математика и RTP конкретной версии игры</td><td class="veris-yes">да</td><td>номер сборки в реестре лаборатории</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="4">Логотип лаборатории в подвале относится к первым двум уровням; надёжность отдельной игры даёт только третий.</td></tr></tfoot>
+      </table>
+    </div>
+    <details class="veris-ask"><summary>Как по номеру отчёта GLI проверить, что сертифицирована именно эта игра?</summary><div class="veris-answer"><p>В окне информации игры или в её паспорте на сайте провайдера указывают идентификатор сборки и дату сертификации. Этот номер сверяют с реестром лаборатории: GLI, iTech Labs и eCOGRA ведут публичные страницы верификации, где по идентификатору видно название тайтла, версию математики и перечень проверенных RTP. Если номер не находится или относится к другой версии, считать игру проверенной нельзя.</p></div></details>
+  </div>
+</section>
+
+<section class="veris-band" id="fair">
+  <div class="veris-col">
+    <p class="veris-no">III</p>
+    <h2>Provably fair: хеш серверного зерна, клиентское зерно и пересчёт раунда</h2>
+    <p class="veris-claim"><b>Provably fair убирает необходимость верить на слово: игрок пересчитывает результат раунда сам.</b> До игры сервер публикует хеш своего секретного зерна, игрок задаёт собственное зерно, каждый раунд получает номер-nonce, а после смены зерна сервер раскрывает секрет. Сверив раскрытое зерно с ранее показанным хешем и повторив вычисление, игрок убеждается, что результат не подменяли задним числом.</p>
+    <figure class="veris-fig veris-flow">
+      <svg width="100%" height="230" role="img" aria-labelledby="pf-t pf-d" viewBox="0 0 680 230" preserveAspectRatio="xMidYMid meet">
+        <title id="pf-t">Порядок проверки provably fair: от хеша серверного зерна до сверки результата</title>
+        <desc id="pf-d">Четыре шага слева направо — публикация хеша, ставки с nonce, раскрытие зерна, пересчёт — и две развязки: совпадение или расхождение.</desc>
+        <defs><marker id="veris-arw" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0l8 4.5L0 9z" fill="var(--hair-2)"/></marker></defs>
+        <g>
+          <rect x="4" y="30" width="150" height="56" rx="10" fill="var(--forest-tint)" stroke="var(--forest)" stroke-width="1.5"/>
+          <circle cx="24" cy="50" r="10" fill="var(--forest)"/><text x="24" y="54" text-anchor="middle" class="veris-inset">1</text>
+          <text x="40" y="52" class="veris-step-t">Хеш зерна</text>
+          <text x="16" y="72" class="veris-axis">сервер публикует SHA-256</text>
+          <line x1="154" y1="58" x2="180" y2="58" stroke="var(--hair-2)" stroke-width="1.6" marker-end="url(#veris-arw)"/>
+          <rect x="182" y="30" width="150" height="56" rx="10" fill="var(--forest-tint)" stroke="var(--forest)" stroke-width="1.5"/>
+          <circle cx="202" cy="50" r="10" fill="var(--forest)"/><text x="202" y="54" text-anchor="middle" class="veris-inset">2</text>
+          <text x="218" y="52" class="veris-step-t">Раунды</text>
+          <text x="194" y="72" class="veris-axis">зерно игрока + nonce</text>
+          <line x1="332" y1="58" x2="358" y2="58" stroke="var(--hair-2)" stroke-width="1.6" marker-end="url(#veris-arw)"/>
+          <rect x="360" y="30" width="150" height="56" rx="10" fill="var(--forest-tint)" stroke="var(--forest)" stroke-width="1.5"/>
+          <circle cx="380" cy="50" r="10" fill="var(--forest)"/><text x="380" y="54" text-anchor="middle" class="veris-inset">3</text>
+          <text x="396" y="52" class="veris-step-t">Раскрытие</text>
+          <text x="372" y="72" class="veris-axis">сервер показывает зерно</text>
+          <line x1="510" y1="58" x2="536" y2="58" stroke="var(--hair-2)" stroke-width="1.6" marker-end="url(#veris-arw)"/>
+          <rect x="538" y="30" width="138" height="56" rx="10" fill="var(--forest-tint)" stroke="var(--forest)" stroke-width="1.5"/>
+          <circle cx="558" cy="50" r="10" fill="var(--forest)"/><text x="558" y="54" text-anchor="middle" class="veris-inset">4</text>
+          <text x="574" y="52" class="veris-step-t">Пересчёт</text>
+          <text x="550" y="72" class="veris-axis">HMAC и сверка хеша</text>
+        </g>
+        <line x1="607" y1="86" x2="607" y2="120" stroke="var(--hair-2)" stroke-width="1.6" marker-end="url(#veris-arw)"/>
+        <rect x="470" y="122" width="206" height="40" rx="8" fill="var(--good-tint)" stroke="var(--good)" stroke-width="1.5"/>
+        <text x="486" y="146" class="veris-term" fill="var(--good)">✓ хеш совпал — раунд честный</text>
+        <rect x="470" y="172" width="206" height="40" rx="8" fill="var(--bad-tint)" stroke="var(--bad)" stroke-width="1.5"/>
+        <text x="486" y="196" class="veris-term" fill="var(--bad)">✕ не совпал — зерно подменено</text>
+        <line x1="607" y1="162" x2="607" y2="172" stroke="var(--hair-2)" stroke-width="1.6" marker-end="url(#veris-arw)"/>
+      </svg>
+      <p class="veris-legend"><span><i class="veris-dot" style="background:var(--good)"></i>результат пересчитывается и совпадает</span><span><i class="veris-dot" style="background:var(--bad)"></i>расхождение — повод для жалобы</span></p>
+      <figcaption class="veris-fig-note">Схема для криптовалютных игр (дайс, краш, рулетка оригиналов). Результат раунда выводится как HMAC-SHA256 от серверного зерна с ключом «клиентское зерно:nonce»; подмена серверного зерна ломает совпадение с заранее опубликованным хешем.</figcaption>
+      <div class="veris-plate">
+        <table>
+          <caption>Четыре шага проверки: что делает сторона и что получает игрок</caption>
+          <thead><tr><th scope="col">Шаг</th><th scope="col">Действие</th><th scope="col">Результат для игрока</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">1. Хеш зерна</th><td>сервер публикует SHA-256 секретного зерна до ставок</td><td>обязательство, которое нельзя изменить позже</td></tr>
+            <tr><th scope="row">2. Раунды</th><td>игрок задаёт своё зерно, каждый раунд получает nonce</td><td>вклад игрока в исход, растущий счётчик</td></tr>
+            <tr><th scope="row">3. Раскрытие</th><td>при смене зерна сервер показывает секрет</td><td>данные для самостоятельной проверки</td></tr>
+            <tr><th scope="row">4. Пересчёт</th><td>игрок считает HMAC и хеш раскрытого зерна</td><td>совпадение подтверждает все прошедшие раунды</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </figure>
+    <div class="veris-prose">
+      <p>Ключевая деталь — порядок во времени. Хеш серверного зерна публикуется до первой ставки, поэтому сервер связан обязательством: изменить зерно задним числом нельзя, не сломав совпадение с уже показанным хешем. Клиентское зерно задаёт игрок, и его участие исключает заготовленную последовательность. Nonce — порядковый номер раунда при текущей паре зёрен; он гарантирует, что два раунда с одинаковыми зёрнами всё равно дадут разные исходы.</p>
+      <p>Пересчёт не требует доверия к сайту. Формула открыта: исход раунда — это HMAC-SHA256, где сообщением служит серверное зерно, а ключом — строка из клиентского зерна и nonce; из полученного значения детерминированно выводится число раунда. Любой сторонний калькулятор с теми же входами выдаёт тот же результат. Если он совпадает с тем, что показала игра, а хеш раскрытого зерна равен опубликованному заранее, раунд честный.</p>
+      <p>Граница применимости важна. Provably fair работает там, где исход формирует раскрываемое зерно, — это криптовалютные игры собственной разработки площадок. К классическому слоту от стороннего провайдера механизм не прикрутить: там исход даёт сертифицированный генератор, и проверкой служит отчёт лаборатории, а не зерно. Поэтому отсутствие provably fair у слота не является дефектом, а его отсутствие у краш-игры — уже повод насторожиться.</p>
+    </div>
+    <details class="veris-ask"><summary>Чем провабли фэйр отличается от сертификата RNG у обычного слота?</summary><div class="veris-answer"><p>Сертификат RNG — это доверие к лаборатории: игрок полагается на то, что независимый аудитор проверил генератор. Провабли фэйр переносит проверку на самого игрока: до раунда публикуется хеш серверного зерна, игрок добавляет своё зерно, а после раунда серверное зерно раскрывается, и результат можно пересчитать самостоятельно. Первый механизм типичен для классических слотов, второй — для криптовалютных игр вроде дайса и краша.</p></div></details>
+  </div>
+</section>
+
+<section class="veris-band" id="rtp">
+  <div class="veris-col">
+    <p class="veris-no">IV</p>
+    <h2>Версия RTP внутри тайтла: 96,5 % на витрине и 94,0 % в окне информации</h2>
+    <p class="veris-claim"><b>У одного слота бывает несколько версий RTP, и значение на витрине не всегда то, по которому игра настроена.</b> Провайдер выпускает тайтл с набором конфигураций отдачи, оператор выбирает одну при подключении. Настоящее число стоит в окне информации запущенной игры; разница между ним и витринным для бонусных расчётов и оценки надёжности решает больше, чем название студии.</p>
+    <figure class="veris-fig">
+      <svg width="100%" height="214" role="img" aria-labelledby="rtp-t rtp-d" viewBox="0 0 680 214" preserveAspectRatio="xMidYMid meet">
+        <title id="rtp-t">Четыре сертифицированные версии RTP одного слота на шкале от 90 до 100 процентов</title>
+        <desc id="rtp-d">Горизонтальные столбцы на обрезанной шкале 90–100 %: высокая 96,5, стандартная 95,0, пониженная 94,0 и минимальная 92,0 процента.</desc>
+        <line x1="150" y1="14" x2="150" y2="172" stroke="var(--gridline)" stroke-width="1"/>
+        <line x1="256" y1="14" x2="256" y2="172" stroke="var(--gridline)" stroke-width="1"/>
+        <line x1="362" y1="14" x2="362" y2="172" stroke="var(--gridline)" stroke-width="1"/>
+        <line x1="468" y1="14" x2="468" y2="172" stroke="var(--gridline)" stroke-width="1"/>
+        <line x1="574" y1="14" x2="574" y2="172" stroke="var(--gridline)" stroke-width="1"/>
+        <text x="4" y="40" class="veris-val">96,5 %</text>
+        <rect x="150" y="26" width="500" height="22" rx="3" fill="var(--c1)"/>
+        <text x="642" y="41" text-anchor="end" class="veris-inset">высокая</text>
+        <text x="4" y="80" class="veris-val">95,0 %</text>
+        <rect x="150" y="66" width="416" height="22" rx="3" fill="var(--c3)"/>
+        <text x="558" y="81" text-anchor="end" class="veris-inset">стандартная</text>
+        <text x="4" y="120" class="veris-val">94,0 %</text>
+        <rect x="150" y="106" width="360" height="22" rx="3" fill="var(--c2)"/>
+        <text x="502" y="121" text-anchor="end" class="veris-inset">пониженная</text>
+        <text x="4" y="160" class="veris-val">92,0 %</text>
+        <rect x="150" y="146" width="248" height="22" rx="3" fill="var(--bad)"/>
+        <text x="390" y="161" text-anchor="end" class="veris-inset">минимальная</text>
+        <text x="150" y="192" text-anchor="middle" class="veris-axis">90</text>
+        <text x="256" y="192" text-anchor="middle" class="veris-axis">92</text>
+        <text x="362" y="192" text-anchor="middle" class="veris-axis">94</text>
+        <text x="468" y="192" text-anchor="middle" class="veris-axis">96</text>
+        <text x="574" y="192" text-anchor="middle" class="veris-axis">98</text>
+        <text x="650" y="192" text-anchor="end" class="veris-axis">RTP, % · шкала 90–100</text>
+      </svg>
+      <p class="veris-legend"><span><i class="veris-dot" style="background:var(--c1)"></i>высокая</span><span><i class="veris-dot" style="background:var(--c3)"></i>стандартная</span><span><i class="veris-dot" style="background:var(--c2)"></i>пониженная</span><span><i class="veris-dot" style="background:var(--bad)"></i>минимальная</span></p>
+      <figcaption class="veris-fig-note">Шкала обрезана до диапазона 90–100 %, чтобы разница версий была видна; ширина столбца = (RTP − 90) × 10 %. Значения — типовой набор конфигураций, который провайдеры допускают для одного тайтла; у конкретной игры список версий указан в её паспорте.</figcaption>
+      <div class="veris-plate">
+        <table>
+          <caption>Те же версии: отдача, преимущество оператора и потеря на обороте 10 000 ₽</caption>
+          <thead><tr><th scope="col">Версия</th><th scope="col">RTP</th><th scope="col">Преимущество оператора</th><th scope="col">Потеря на 10 000 ₽</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Высокая</th><td class="veris-right">96,5 %</td><td class="veris-right">3,5 %</td><td class="veris-right veris-yes">350 ₽</td></tr>
+            <tr><th scope="row">Стандартная</th><td class="veris-right">95,0 %</td><td class="veris-right">5,0 %</td><td class="veris-right">500 ₽</td></tr>
+            <tr><th scope="row">Пониженная</th><td class="veris-right">94,0 %</td><td class="veris-right">6,0 %</td><td class="veris-right veris-part">600 ₽</td></tr>
+            <tr><th scope="row">Минимальная</th><td class="veris-right">92,0 %</td><td class="veris-right">8,0 %</td><td class="veris-right veris-no-ink">800 ₽</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="4">Потеря = оборот × (1 − RTP). Между высокой и минимальной версией одного тайтла разница в ожидаемой потере больше чем вдвое.</td></tr></tfoot>
+        </table>
+      </div>
+    </figure>
+    <div class="veris-prose">
+      <p>Несколько версий RTP — не нарушение само по себе: лаборатория сертифицирует каждую конфигурацию отдельно, и все они честны в смысле генератора. Проблема в раскрытии. Надёжной считается игра, у которой действующее значение видно игроку до ставки, а не спрятано за витринным числом из рекламного описания. Окно информации запущенного тайтла — первичный источник; значок «i» или раздел «Правила» внутри игры показывают конфигурацию, которую включил именно этот оператор.</p>
+      <p>Проверка занимает один шаг: открыть окно информации и сравнить число с тем, что обещано на витрине. Совпадение — хороший признак; расхождение не делает игру нечестной, но меняет арифметику. При RTP 94,0 % вместо заявленных 96,5 % преимущество оператора вырастает с 3,5 до 6,0 %, а ожидаемая потеря на том же обороте — почти вдвое. Для отыгрыша бонуса это разница между выходом в ноль и устойчивым минусом.</p>
+      <p>Отдельный случай — агрегированные версии «динамический RTP», где значение меняется по решению оператора. Такую игру сложнее считать надёжной: паспорт перестаёт фиксировать одно число, и проверка сводится к моментальному снимку окна информации. Если провайдер и оператор не раскрывают текущую конфигурацию вовсе, пункт считается непройденным независимо от репутации студии.</p>
+    </div>
+    <details class="veris-ask"><summary>Где посмотреть RTP, по которому игра настроена у этого оператора?</summary><div class="veris-answer"><p>В окне информации самой игры — значок «i» или раздел «Правила» внутри запущенного тайтла, а не в описании на витрине. Провайдеры вроде Play’n GO, Pragmatic Play и NetEnt выпускают один слот в нескольких версиях RTP, и оператор выбирает версию при подключении. Если в окне стоит 94,0 % при заявленных на витрине 96,5 %, расчёт ведут по 94,0 %.</p></div></details>
+  </div>
+</section>
+
+<section class="veris-band" id="domain">
+  <div class="veris-col">
+    <p class="veris-no">V</p>
+    <h2>Домен загрузки: сеть провайдера против похожей обёртки со стороннего адреса</h2>
+    <p class="veris-claim"><b>Настоящая игра грузится с домена своего провайдера, подделка — со стороннего адреса.</b> Фрейм тайтла тянет ресурсы с конкретного домена или сети доставки, и этот адрес виден в свойствах кадра. Если сборку отдаёт сайт, не связанный со студией-разработчиком, перед игроком обёртка, в которой математику и выплаты могли изменить незаметно.</p>
+    <div class="veris-prose">
+      <p>Механика проста. Легальный оператор или агрегатор встраивает игру через iframe, и содержимое кадра приходит с инфраструктуры провайдера: домена студии или её сети доставки контента. Клон копирует внешний вид тайтла — графику, звук, интерфейс — но запускает собственный код с чужого домена. Внешне раунд выглядит так же, однако генератор и таблица выплат уже не те, что проверяла лаборатория.</p>
+      <p>Проверить домен можно без специальных инструментов: контекстное меню на кадре игры показывает адрес фрейма, а в свойствах страницы видно, откуда подгружаются ресурсы. Ориентир — совпадение домена с доменом разработчика тайтла, а не с доменом казино и не с незнакомым адресом. Полное совпадение не гарантирует подлинность на сто процентов, но расхождение — весомый сигнал против игры.</p>
+      <p>Сопутствующие признаки усиливают вывод. Оригинальный тайтл обслуживается по защищённому соединению с действующим сертификатом домена; окно информации, история раунда и раздел честности на месте; номер версии совпадает с паспортом. У обёртки обычно выпадает хотя бы один элемент: нет окна «i», история недоступна, RTP не раскрыт или домен сертификата не совпадает с доменом игры. Набор расхождений надёжнее одного признака.</p>
+    </div>
+    <div class="veris-plate">
+      <table>
+        <caption>Оригинальная сборка и обёртка-клон по проверяемым признакам</caption>
+        <thead><tr><th scope="col">Признак</th><th scope="col">Оригинал</th><th scope="col">Обёртка-клон</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Домен фрейма игры</th><td class="veris-yes">сеть провайдера</td><td class="veris-no-ink">сторонний адрес</td></tr>
+          <tr><th scope="row">Окно информации «i»</th><td class="veris-yes">на месте, RTP раскрыт</td><td class="veris-no-ink">отсутствует или пустое</td></tr>
+          <tr><th scope="row">История раунда</th><td class="veris-yes">доступна, с Round ID</td><td class="veris-no-ink">недоступна</td></tr>
+          <tr><th scope="row">Номер версии</th><td class="veris-yes">совпадает с паспортом</td><td class="veris-no-ink">не совпадает или скрыт</td></tr>
+          <tr><th scope="row">Сертификат соединения</th><td class="veris-yes">домен совпадает с игрой</td><td class="veris-part">другой домен</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="3">Один расходящийся признак — повод не играть; совпадение всех пяти — практический максимум проверки со стороны игрока.</td></tr></tfoot>
+      </table>
+    </div>
+    <details class="veris-ask"><summary>Почему важно, с какого домена подгружается сама игра?</summary><div class="veris-answer"><p>Оригинальный тайтл грузится с домена провайдера или его сети доставки, и адрес виден в свойствах фрейма игры. Подделка подгружает похожую по виду сборку со стороннего домена, где математику и выплаты меняют незаметно для игрока. Совпадение домена с доменом студии-разработчика — косвенный, но проверяемый признак того, что запущена настоящая игра, а не обёртка.</p></div></details>
+  </div>
+</section>
+
+<section class="veris-band" id="record">
+  <div class="veris-col">
+    <p class="veris-no">VI</p>
+    <h2>Запись раунда: Round ID, история ставок и восстановление спорного спина</h2>
+    <p class="veris-claim"><b>Без номера раунда спор о выигрыше превращается в слово против слова.</b> Каждый раунд в честной игре получает уникальный Round ID, по которому оператор и провайдер находят ставку, результат и время в своих журналах. История с этими номерами доступна игроку; именно она превращает жалобу на невыплату или сбой в проверяемое обращение.</p>
+    <div class="veris-prose">
+      <p>Round ID — это ключ к записи раунда в системах учёта. Оператор ведёт журнал ставок, провайдер — журнал исходов игры; оба связаны одним идентификатором. Когда игрок открывает историю в меню тайтла или в разделе аккаунта, он видит список раундов с номерами, суммами ставок, результатами и отметками времени. Эта запись — не украшение интерфейса, а доказательная база на случай расхождения.</p>
+      <p>Сценарии, где запись решает исход, однотипны: выигрыш отобразился, но не зачислился; раунд прервался на сбое соединения; баланс изменился не на ту сумму. С Round ID обращение в поддержку получает конкретику — номер, время, ожидаемый и фактический результат, — и оператор поднимает тот же раунд в своём журнале. Без номера остаётся описание «вчера вечером крутил и не получил», которое проверить нельзя.</p>
+      <p>Надёжная игра устроена так, чтобы запись нельзя было потерять по вине интерфейса: история хранится на стороне сервера, а не только в текущей сессии браузера, и доступна после перезахода. Полезная привычка — сохранять Round ID и время сразу при спорном раунде, не дожидаясь ответа поддержки, потому что глубина доступной истории у разных провайдеров отличается. Если история раунда у игры недоступна в принципе, пункт считается непройденным: доказать что-либо по такой игре нечем.</p>
+    </div>
+    <div class="veris-plate">
+      <table>
+        <caption>Что хранит запись раунда и зачем это нужно в споре</caption>
+        <thead><tr><th scope="col">Поле записи</th><th scope="col">Что содержит</th><th scope="col">Роль в споре</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Round ID</th><td>уникальный номер раунда</td><td>ключ для поиска в журналах сторон</td></tr>
+          <tr><th scope="row">Время</th><td>дата и время раунда</td><td>привязка к сессии и балансу</td></tr>
+          <tr><th scope="row">Ставка и линии</th><td>сумма и параметры ставки</td><td>проверка списания со счёта</td></tr>
+          <tr><th scope="row">Результат</th><td>исход и начисление</td><td>сверка с тем, что отобразилось</td></tr>
+          <tr><th scope="row">Статус</th><td>завершён, прерван, возвращён</td><td>разбор сбоя и незавершённого раунда</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="3">Полнота полей отличается у провайдеров; минимально полезный набор — Round ID, время и результат.</td></tr></tfoot>
+      </table>
+    </div>
+    <details class="veris-ask"><summary>Что такое Round ID и зачем сохранять историю раунда?</summary><div class="veris-answer"><p>Round ID — уникальный номер раунда, по которому оператор и провайдер находят ставку, результат и время в своих журналах. История раунда доступна в меню игры или в разделе аккаунта и содержит эти номера. Если возникнет спор о невыплаченном выигрыше или сбое, именно Round ID позволяет восстановить, что произошло; без него жалоба в поддержку или регулятору остаётся словом против слова.</p></div></details>
+  </div>
+</section>
+
+<section class="veris-band" id="clones">
+  <div class="veris-col">
+    <p class="veris-no">VII</p>
+    <h2>Списки клонов и фейковых сборок: где сверить, что тайтл настоящий</h2>
+    <p class="veris-claim"><b>Поддельные сборки популярных слотов — отдельная категория риска, и их собирают в публичные списки предупреждений.</b> Клон повторяет вид известной игры, но работает с заниженной отдачей или подделанным исходом. Базы предупреждений о фейковых играх ведут тематические площадки; сверка с ними — седьмая проверка, которая ловит переделку, прошедшую остальные пункты по частям.</p>
+    <div class="veris-prose">
+      <p>Фейковая сборка отличается от переконфигурированной версии. Переконфигурированная — это честная, но менее щедрая версия от того же провайдера, сертифицированная лабораторией; её ловит проверка RTP. Клон — это сторонний код, выдающий себя за известный тайтл; его ловит проверка домена и сертификата. Списки предупреждений фиксируют именно второй случай: сообщения игроков и разборы, где конкретная сборка на конкретной площадке вела себя не как оригинал.</p>
+      <p>Практический порядок сверки короткий. Сначала собирают паспорт игры из предыдущих пунктов: домен фрейма, версия и RTP из окна информации, номер сертификата. Затем сверяют с реестром лаборатории — находится ли сборка. Затем ищут название игры и площадки в базах предупреждений о поддельных играх. Совпадений в чёрных списках быть не должно; наличие свежего предупреждения перевешивает любые галочки по остальным пунктам.</p>
+      <p>У метода есть границы. Отсутствие тайтла в списках не доказывает его подлинность — просто на него пока не жаловались. Поэтому сверка со списками работает как дополнительный фильтр поверх шести технических проверок, а не вместо них. Надёжным считается слот, который прошёл все шесть пунктов и при этом не встречается в предупреждениях; этого достаточно для решения со стороны игрока, не имеющего доступа к внутренним журналам.</p>
+      <p>Отдельно стоит различать площадку публикации и сам источник. Жалоба в базе иногда относится не к тайтлу вообще, а к его запуску на конкретном сайте через сомнительную обёртку: оригинал от провайдера остаётся честным, а претензия касается скина, который его подменил. Поэтому в предупреждении смотрят на связку «название плюс площадка», а не только на имя слота. Такой подход избавляет от ложного отказа от добросовестной студии из-за чужой подделки под её вывеску.</p>
+    </div>
+    <div class="veris-plate">
+      <table>
+        <caption>Три состояния игры и как их различить по проверкам</caption>
+        <thead><tr><th scope="col">Состояние</th><th scope="col">Откуда исход</th><th scope="col">Чем ловится</th><th scope="col">Вывод</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Оригинал</th><td>сертифицированная версия провайдера</td><td>домен, сертификат, RTP совпадают</td><td class="veris-yes">надёжна</td></tr>
+          <tr><th scope="row">Переконфигурация</th><td>честная версия с другим RTP</td><td>окно «i» показывает меньшее число</td><td class="veris-part">честна, но менее щедра</td></tr>
+          <tr><th scope="row">Клон</th><td>сторонний код под чужим именем</td><td>чужой домен, нет сертификата, списки</td><td class="veris-no-ink">избегать</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="4">Переконфигурация и клон выглядят одинаково на витрине; различает их только проверка источника и сертификата.</td></tr></tfoot>
+      </table>
+    </div>
+    <details class="veris-ask"><summary>Как отличить оригинальный слот от переделанной сборки с заниженным RTP?</summary><div class="veris-answer"><p>Сверяют три вещи: домен загрузки игры, номер версии и RTP в окне информации, идентификатор сертификата. У оригинала домен принадлежит провайдеру, версия и RTP совпадают с паспортом тайтла, а номер отчёта находится в реестре лаборатории. У переделки расходится хотя бы один пункт: чужой домен, RTP ниже документированного или сертификат, который не находится. Дополнительно сверяются с базами предупреждений о фейковых сборках.</p></div></details>
+  </div>
+</section>
+
+<section class="veris-band" id="recap">
+  <div class="veris-col">
+    <p class="veris-no">VIII</p>
+    <h2>Сколько из семи пунктов закрывают четыре расчётных образца игр</h2>
+    <p class="veris-claim"><b>Семь пунктов дают шкалу, а не ярлык: игра набирает от нуля до семи закрытых проверок.</b> Ниже — четыре расчётных образца, собранные для иллюстрации метода: сертифицированный слот, криптовалютная игра с provably fair, переконфигурированная версия и клон. Это не реальные тайтлы и не оценка конкретных студий, а примеры того, как распределяются галочки.</p>
+    <figure class="veris-fig">
+      <svg width="100%" height="200" role="img" aria-labelledby="cov-t cov-d" viewBox="0 0 680 200" preserveAspectRatio="xMidYMid meet">
+        <title id="cov-t">Сколько из семи пунктов закрывает каждый из четырёх образцов игр</title>
+        <desc id="cov-d">Горизонтальные столбцы: сертифицированный слот шесть из семи, криптоигра семь, переконфигурация пять, клон один.</desc>
+        <line x1="210" y1="14" x2="210" y2="158" stroke="var(--gridline)" stroke-width="1"/>
+        <line x1="272" y1="14" x2="272" y2="158" stroke="var(--gridline)" stroke-width="1"/>
+        <line x1="334" y1="14" x2="334" y2="158" stroke="var(--gridline)" stroke-width="1"/>
+        <line x1="396" y1="14" x2="396" y2="158" stroke="var(--gridline)" stroke-width="1"/>
+        <line x1="458" y1="14" x2="458" y2="158" stroke="var(--gridline)" stroke-width="1"/>
+        <line x1="520" y1="14" x2="520" y2="158" stroke="var(--gridline)" stroke-width="1"/>
+        <line x1="582" y1="14" x2="582" y2="158" stroke="var(--gridline)" stroke-width="1"/>
+        <line x1="644" y1="14" x2="644" y2="158" stroke="var(--gridline)" stroke-width="1"/>
+        <text x="4" y="38" class="veris-val">Слот (серт.)</text>
+        <rect x="210" y="24" width="372" height="22" rx="3" fill="var(--c1)"/>
+        <text x="596" y="39" class="veris-val">6/7</text>
+        <text x="4" y="74" class="veris-val">Криптоигра</text>
+        <rect x="210" y="60" width="434" height="22" rx="3" fill="var(--good)"/>
+        <text x="658" y="75" text-anchor="end" class="veris-val" fill="var(--on-forest)">7/7</text>
+        <text x="4" y="110" class="veris-val">Переконфиг.</text>
+        <rect x="210" y="96" width="310" height="22" rx="3" fill="var(--c2)"/>
+        <text x="534" y="111" class="veris-val">5/7</text>
+        <text x="4" y="146" class="veris-val">Клон</text>
+        <rect x="210" y="132" width="62" height="22" rx="3" fill="var(--bad)"/>
+        <text x="286" y="147" class="veris-val">1/7</text>
+        <text x="210" y="178" text-anchor="middle" class="veris-axis">0</text>
+        <text x="334" y="178" text-anchor="middle" class="veris-axis">2</text>
+        <text x="458" y="178" text-anchor="middle" class="veris-axis">4</text>
+        <text x="582" y="178" text-anchor="middle" class="veris-axis">6</text>
+        <text x="644" y="178" text-anchor="middle" class="veris-axis">7</text>
+      </svg>
+      <p class="veris-legend"><span><i class="veris-dot" style="background:var(--good)"></i>семь из семи</span><span><i class="veris-dot" style="background:var(--c1)"></i>шесть</span><span><i class="veris-dot" style="background:var(--c2)"></i>пять</span><span><i class="veris-dot" style="background:var(--bad)"></i>один</span></p>
+      <figcaption class="veris-fig-note">Число закрытых пунктов из семи для каждого образца. Для слота пункт provably fair неприменим и засчитан сертификатом RNG; для криптоигры роль сертификата математики выполняет открытая формула выплат. Образцы — расчётные примеры, а не конкретные игры.</figcaption>
+    </figure>
+    <ol class="veris-samples">
+      <li class="veris-sample">
+        <h3><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="var(--forest-tint)"/><path d="M12 21l5 5 11-13" fill="none" stroke="var(--forest)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>Слот «Эталон»<span class="veris-badge">расчётный пример</span></h3>
+        <dl>
+          <div><dt>Сертификат на сборку</dt><dd class="veris-yes">есть, iTech Labs</dd></div>
+          <div><dt>Provably fair</dt><dd>неприменим</dd></div>
+          <div><dt>Версия RTP</dt><dd>96,5 % в окне «i»</dd></div>
+          <div><dt>Домен</dt><dd class="veris-yes">провайдера</dd></div>
+          <div><dt>Round ID</dt><dd class="veris-yes">в истории</dd></div>
+          <div><dt>Клоны</dt><dd class="veris-yes">нет в списках</dd></div>
+          <div><dt>Итог</dt><dd>6 из 7</dd></div>
+        </dl>
+      </li>
+      <li class="veris-sample">
+        <h3><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="var(--good-tint)"/><circle cx="20" cy="20" r="8" fill="none" stroke="var(--good)" stroke-width="2.6"/><path d="M20 12v8l5 3" fill="none" stroke="var(--good)" stroke-width="2.6" stroke-linecap="round"/></svg>Криптоигра «Зерно»<span class="veris-badge">расчётный пример</span></h3>
+        <dl>
+          <div><dt>Сертификат на сборку</dt><dd>формула открыта</dd></div>
+          <div><dt>Provably fair</dt><dd class="veris-yes">есть, пересчёт</dd></div>
+          <div><dt>Версия RTP</dt><dd>из таблицы выплат</dd></div>
+          <div><dt>Домен</dt><dd class="veris-yes">площадки</dd></div>
+          <div><dt>Round ID</dt><dd class="veris-yes">с хешем зерна</dd></div>
+          <div><dt>Клоны</dt><dd class="veris-yes">нет в списках</dd></div>
+          <div><dt>Итог</dt><dd>7 из 7</dd></div>
+        </dl>
+      </li>
+      <li class="veris-sample">
+        <h3><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="var(--warn-tint)"/><path d="M20 11l9 16H11z" fill="none" stroke="var(--warn)" stroke-width="2.6" stroke-linejoin="round"/><line x1="20" y1="18" x2="20" y2="22" stroke="var(--warn)" stroke-width="2.6" stroke-linecap="round"/><circle cx="20" cy="25" r="1.3" fill="var(--warn)"/></svg>Версия «Пониженная»<span class="veris-badge">расчётный пример</span></h3>
+        <dl>
+          <div><dt>Сертификат на сборку</dt><dd class="veris-yes">есть, на версию</dd></div>
+          <div><dt>Provably fair</dt><dd>неприменим</dd></div>
+          <div><dt>Версия RTP</dt><dd class="veris-part">94,0 %, раскрыт</dd></div>
+          <div><dt>Домен</dt><dd class="veris-yes">провайдера</dd></div>
+          <div><dt>Round ID</dt><dd class="veris-yes">в истории</dd></div>
+          <div><dt>Клоны</dt><dd class="veris-yes">нет в списках</dd></div>
+          <div><dt>Итог</dt><dd>5 из 7</dd></div>
+        </dl>
+      </li>
+      <li class="veris-sample">
+        <h3><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="var(--bad-tint)"/><line x1="14" y1="14" x2="26" y2="26" stroke="var(--bad)" stroke-width="3" stroke-linecap="round"/><line x1="26" y1="14" x2="14" y2="26" stroke="var(--bad)" stroke-width="3" stroke-linecap="round"/></svg>Клон «Обёртка»<span class="veris-badge">расчётный пример</span></h3>
+        <dl>
+          <div><dt>Сертификат на сборку</dt><dd class="veris-no-ink">не находится</dd></div>
+          <div><dt>Provably fair</dt><dd class="veris-no-ink">нет</dd></div>
+          <div><dt>Версия RTP</dt><dd class="veris-no-ink">скрыт</dd></div>
+          <div><dt>Домен</dt><dd class="veris-no-ink">сторонний</dd></div>
+          <div><dt>Round ID</dt><dd class="veris-no-ink">нет истории</dd></div>
+          <div><dt>Клоны</dt><dd class="veris-part">встречается в базе</dd></div>
+          <div><dt>Итог</dt><dd>1 из 7</dd></div>
+        </dl>
+      </li>
+    </ol>
+    <div class="veris-prose">
+      <p>Шкала читается без порога «надёжно или нет»: семь и шесть пунктов — рабочий выбор, пять — честная, но менее выгодная игра, один — повод закрыть вкладку. Переконфигурированная версия набирает пять не потому, что обманывает, а потому что её отдача ниже и она не несёт provably fair; для расчёта бонуса это существенно, для оценки честности — нет. Клон проваливает почти всё сразу, и его выдаёт первая же техническая проверка.</p>
+      <p>Главная ценность разбивки на пункты в том, что она не требует верить рейтингам. Каждую галочку игрок ставит сам по проверяемому источнику: окно информации, раздел честности, свойства фрейма, история раунда, реестр лаборатории, базы предупреждений. Результат — не оценка «из десяти», а список закрытых и незакрытых пунктов, который одинаково читается для слота и для криптоигры.</p>
+    </div>
+  </div>
+</section>
+
+<section class="veris-band" id="faq">
+  <div class="veris-col">
+    <p class="veris-no">IX</p>
+    <h2>Что ещё спрашивают о надёжности конкретной игры</h2>
+    <div class="veris-ask-stack">
+      <details class="veris-ask"><summary>Можно ли доверять игре без провабли фэйр, если у неё есть сертификат лаборатории?</summary><div class="veris-answer"><p>Да, для классических слотов это основной механизм доверия: провабли фэйр к ним технически неприменим, потому что результат формирует сертифицированный генератор, а не раскрываемое зерно. Для такой игры проверяют сертификат RNG на версию, раскрытый RTP и запись раунда. Провабли фэйр ожидают от криптовалютных игр, где его отсутствие — уже повод для осторожности.</p></div></details>
+      <details class="veris-ask"><summary>Влияет ли надёжность игры на налог с выигрыша в России?</summary><div class="veris-answer"><p>Нет, налог не зависит от того, насколько проверяема игра. Для налогового резидента России выигрыш в азартных играх — доход, с которого НДФЛ платит сам игрок по декларации 3-НДФЛ, если сумма выигрышей за год превысила 4 000 ₽; ставка 13 % в пределах общей шкалы. Иностранный оператор налоговым агентом не выступает. Проверяемость раунда влияет на доказуемость выигрыша в споре, а не на размер налога.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<section class="veris-band" id="updates">
+  <div class="veris-col">
+    <p class="veris-no">X</p>
+    <h2>Где выходят отчёты лабораторий и предупреждения о клонах</h2>
+    <div class="veris-prose">
+      <p>Паспорта игр меняются: провайдеры выпускают новые версии RTP, лаборатории обновляют отчёты, а списки предупреждений пополняются свежими клонами. Эта страница пересматривается, когда меняется методика проверки или типовой набор версий отдачи; дата последней сверки стоит в начале. Разбор новых отчётов лабораторий, предупреждения о переконфигурированных версиях и поддельных сборках выходят в Telegram-канале редакции.</p>
+    </div>
+    <div class="veris-wire">
+      <div>
+        <p><b>Канал редакции в Telegram</b></p>
+        <p class="veris-sm veris-mute">Отчёты лабораторий на конкретные тайтлы, свежие версии RTP и предупреждения о клонах в формате семи пунктов. Единственная внешняя ссылка на эту площадку на странице.</p>
+      </div>
+      <a class="veris-wire-link" href="https://t.me/top_casino_2027" rel="noopener" target="_blank">Открыть канал</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<section class="veris-adult">
+  <div class="veris-col">
+    <p><span class="veris-adult-mark">18+</span><b>Азартные игры — только для совершеннолетних.</b> Проверяемость игры не делает её выгодной: при любом раскрытом RTP преимущество остаётся у оператора, и средний результат игры отрицателен. Разбор помогает отличить честную игру от подделки, а не выиграть. Если игра перестаёт быть развлечением, используйте лимиты и самоисключение в настройках аккаунта и обратитесь за помощью.</p>
+  </div>
+</section>
+
+<footer class="veris-foot">
+  <div class="veris-full veris-foot-grid">
+    <div>
+      <h3>Зерно и подпись</h3>
+      <p>Редакция разбирает, что делает проверяемой отдельную игру, а не казино. На странице нет партнёрских ссылок, рейтингов операторов и рекламных кодов. Образцы «Эталон», «Зерно», «Пониженная» и «Обёртка» — расчётные примеры метода, а не конкретные тайтлы и не оценка студий.</p>
+    </div>
+    <div>
+      <h3>Как проверяли</h3>
+      <p>Семь пунктов: сертификат на сборку, provably fair, версия RTP, домен загрузки, Round ID, списки клонов и сверка паспорта. Потеря = оборот × (1 − RTP). Исход provably fair = HMAC-SHA256 от серверного зерна с ключом «клиентское зерно:nonce».</p>
+    </div>
+    <div>
+      <h3>Обновления</h3>
+      <p class="nums">Сверка метода: 1 октября 2026. Следующая плановая — при изменении набора версий RTP или стандарта сертификации.</p>
+      <p>© 2026 редакция «Зерно и подпись»</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,btn=document.querySelector('[data-toggle]');
+  try{var saved=localStorage.getItem('veris-theme');if(saved==='dark'||saved==='light'){root.setAttribute('data-theme',saved);}}catch(e){}
+  if(btn){btn.addEventListener('click',function(){
+    var dark=root.getAttribute('data-theme')==='dark'||(!root.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme:dark)').matches);
+    var next=dark?'light':'dark';root.setAttribute('data-theme',next);
+    try{localStorage.setItem('veris-theme',next);}catch(e){}
+  });}
+  var links=[].slice.call(document.querySelectorAll('.veris-nav a'));
+  if('IntersectionObserver' in window&&links.length){
+    var map={};links.forEach(function(a){var id=a.getAttribute('href').slice(1);var el=document.getElementById(id);if(el){map[id]=a;}});
+    var io=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){links.forEach(function(a){a.classList.remove('veris-here');});var a=map[en.target.id];if(a){a.classList.add('veris-here');}}});},{rootMargin:'-40% 0px -55% 0px'});
+    Object.keys(map).forEach(function(id){io.observe(document.getElementById(id));});
+  }
+})();
+</script>
+</body>
+</html>

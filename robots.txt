@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nadezhnye-igry496.github.io/sitemap.xml
